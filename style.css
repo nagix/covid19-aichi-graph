@@ -1,0 +1,42 @@
+body {
+	font: 16px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	color: #333;
+	touch-action: none;
+}
+
+div.container {
+	width: 140px;
+	height: 50px;
+}
+div.id {
+	display: inline-block;
+	width: 50px;
+	height: 100%;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	margin-right: 10px;
+	vertical-align: middle;
+	line-height: 50px;
+	text-align: center;
+	font-size: 24px;
+	color: #fff;
+}
+div.label {
+	height: 100%;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 50px;
+}
+
+div.tooltip {
+	position: absolute;
+	text-align: left;
+	padding: 10px;
+	font: 12px sans-serif;
+	color: #fff;
+	background: #333;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+	white-space: nowrap;
+}
