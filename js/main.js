@@ -157,12 +157,16 @@ loadJSON(DATA_URL).then(function(data) {
 
 	inner.selectAll('g.node')
 		.on('mouseover', function(d) {
-			tooltip.transition()
-				.duration(200)
-				.style('opacity', .9);
-			tooltip.html(graph.node(d).description)
-				.style('left', (d3.event.pageX) + 'px')
-				.style('top', (d3.event.pageY - 28) + 'px');
+			var description = graph.node(d).description;
+
+			if (description) {
+				tooltip.transition()
+					.duration(200)
+					.style('opacity', .9);
+				tooltip.html(description)
+					.style('left', (d3.event.pageX) + 'px')
+					.style('top', (d3.event.pageY - 28) + 'px');
+			}
 		})
 		.on('mouseout', function(d) {
 			tooltip.transition()

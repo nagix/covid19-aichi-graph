@@ -4,9 +4,18 @@ body {
 	touch-action: none;
 }
 
+svg {
+	cursor: grab;
+}
+
+svg:active {
+	cursor: grabbing;
+}
+
 div.container {
 	width: 140px;
 	height: 50px;
+	user-select: none;
 }
 div.id {
 	display: inline-block;
