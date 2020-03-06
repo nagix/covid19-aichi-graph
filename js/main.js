@@ -19,22 +19,25 @@
  */
 
 var DATA_URL = 'data/data.json';
+var THEME_COLOR = '#3666b0';
+var INITIAL_SCALE = 0.66;
+var GRAPH_MARGIN = 20;
 
 var initialNodes = [
-	{ id: 'wuhan', label: '武漢', width: 100, height: 30, rx: 5, ry: 5, style: 'stroke: #aaa; fill: #fff;' },
-	{ id: 'hawai', label: 'ハワイ', width: 100, height: 30, rx: 5, ry: 5, style: 'stroke: #aaa; fill: #fff;' },
-	{ id: 'unknown', label: '不明', width: 100, height: 30, rx: 5, ry: 5, style: 'stroke: #aaa; fill: #fff;' },
-	{ id: 'france', label: 'フランス', width: 100, height: 30, rx: 5, ry: 5, style: 'stroke: #aaa; fill: #fff;' }
+	{ id: 'wuhan', label: '武漢' },
+	{ id: 'hawai', label: 'ハワイ' },
+	{ id: 'unknown', label: '不明' },
+	{ id: 'france', label: 'フランス' }
 ];
 
 var clusters = [
-	{ id: 'gymA', label: 'スポーツジムAクラスター', clusterLabelPos: 'top', style: 'fill: #3666b0; opacity: 0.2;', nodes:[4, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 51] },
-	{ id: 'gymB', label: 'スポーツジムBクラスター', clusterLabelPos: 'top', style: 'fill: #3666b0; opacity: 0.2;', nodes:[15, 23, 24, 26] }
+	{ id: 'gymA', label: 'スポーツジムAクラスター', nodes:[4, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 51] },
+	{ id: 'gymB', label: 'スポーツジムBクラスター', nodes:[15, 23, 24, 26] }
 ];
 
 var boxColors = {
-	'男性': {stroke: '#559', fill: '#ccf'},
-	'女性': {stroke: '#955', fill: '#fcc'}
+	'男性': { stroke: '#559', fill: '#ccf' },
+	'女性': { stroke: '#955', fill: '#fcc' }
 };
 
 var loadJSON = function(url) {
@@ -67,19 +70,34 @@ var tooltip = d3.select('body').append('div')
 
 loadJSON(DATA_URL).then(function(data) {
 
+	document.getElementById('last-update').innerHTML = data.patients.date;
+
 	var graph = new dagreD3.graphlib.Graph({ compound: true });
 	graph.setGraph({ rankdir: 'LR' });
 
 	initialNodes.forEach(function(node) {
-		return graph.setNode(node.id, node);
+		var id = node.id;
+
+		return graph.setNode(id, {
+			id: id,
+			label: node.label,
+			width: 100,
+			height: 30,
+			rx: 5,
+			ry: 5,
+			style: 'stroke: #aaa; fill: #fff;'
+		});
 	});
 
 	data.patients.data.forEach(function(patient) {
 		var id = patient['No'];
+		var address = patient['居住地'];
+		var age = patient['年代'];
+		var sex = patient['性別'];
 		var remarks = patient['備考'] || '';
 		var supplement = patient['補足'] || '';
 		var dead = remarks.match(/死亡/);
-		var colors = boxColors[patient['性別']];
+		var colors = boxColors[sex];
 		var sourceIds = (supplement.match(/[0-9０-９]+/g) || ['unknown'])
 			.map(fullwidthToHalfwith)
 			.map(function(sourceId) {
@@ -98,10 +116,9 @@ loadJSON(DATA_URL).then(function(data) {
 			id: id,
 			labelType: 'html',
 			label: '<div class="container">' +
-				'<div class="id" style="background-color: ' + colors.stroke + ';">' +
-				id + '</div><div class="label">' +
-				patient['年代'] + patient['性別'] +
-				'</div></div>',
+				'<div class="id" style="background-color: ' + colors.stroke + ';">' + id + '</div>' +
+				'<div class="label">' + age + sex + '</div>' +
+				'</div>',
 			labelpos: 'l',
 			width: 120,
 			height: 30,
@@ -111,11 +128,11 @@ loadJSON(DATA_URL).then(function(data) {
 				'; stroke-width: ' + (dead ? 3 : 1) +
 				'; fill: ' + colors.fill,
 			description: 'No: ' + id +
-				'<br>居住地: ' + patient['居住地'] +
-				'<br>年代: ' + patient['年代'] +
-				'<br>性別: ' + patient['性別'] +
-				'<br>備考: ' + (patient['備考'] || '') +
-				'<br>補足: ' + (patient['補足'] || '') +
+				'<br>居住地: ' + address +
+				'<br>年代: ' + age +
+				'<br>性別: ' + sex +
+				'<br>備考: ' + remarks +
+				'<br>補足: ' + supplement +
 				'<br>発表日: ' + patient['short_date']
 		});
 
@@ -140,16 +157,24 @@ loadJSON(DATA_URL).then(function(data) {
 	});
 
 	clusters.forEach(function(cluster) {
-		graph.setNode(cluster.id, cluster);
+		var id = cluster.id;
+
+		graph.setNode(id, {
+			id: id,
+			label: cluster.label,
+			clusterLabelPos: 'top',
+			style: 'fill: ' + THEME_COLOR + '; opacity: 0.2;',
+			nodes: cluster.nodes
+		});
 	});
 
 	var svg = d3.select('#network');
 	var inner = svg.select('g');
 
-	var zoom = d3.behavior.zoom().on('zoom', function () {
-		inner.attr('transform', 'translate(' + d3.event.translate + ')' +
-			'scale(' + d3.event.scale + ')');
-	});
+	var zoom = d3.zoom()
+		.on('zoom', function () {
+			inner.attr('transform', d3.event.transform);
+		});
 	svg.call(zoom);
 
 	var render = new dagreD3.render();
@@ -174,12 +199,60 @@ loadJSON(DATA_URL).then(function(data) {
 				.style('opacity', 0);
 		})
 
-	var initialScale = 0.66;
-	zoom
-		.translate([(svg.attr('width') - graph.graph().width * initialScale) / 2, 20])
-		.scale(initialScale)
-		.event(svg);
-	svg.attr('height', graph.graph().height * initialScale + 40);
+	var width = graph.graph().width;
+	var height = graph.graph().height;
+	var svgElement = svg.node();
 
-	document.getElementById('last-update').innerHTML = data.patients.date;
+	var resetHeight = function() {
+		svgElement.style.height =
+			document.body.clientHeight - svgElement.getBoundingClientRect().top;
+	}
+
+	var redraw = function(event) {
+		var initialTransform = event.transform || {};
+		var transform = d3.zoomTransform(svgElement);
+		var k = initialTransform.k || transform.k;
+		var x = initialTransform.x || transform.x / k;
+		var y = initialTransform.y || transform.y / k;
+
+		resetHeight();
+
+		var clientWidth = svgElement.clientWidth;
+		var clientHeight = svgElement.clientHeight;
+		var xScale = clientWidth / (width + GRAPH_MARGIN * 2);
+		var yScale = clientHeight / (height + GRAPH_MARGIN * 2);
+		var dx = clientWidth / k - width;
+		var dy = clientHeight / k - height;
+		var extent = [
+			Math.min(xScale, yScale, INITIAL_SCALE),
+			Math.max(xScale, yScale, 1)
+		];
+		var scale = Math.min(Math.max(k, extent[0]), extent[1]);
+		var xOffset = xScale > k ? dx / 2 : Math.max(x, dx - GRAPH_MARGIN);
+		var yOffset = yScale > k ? dy / 2 : Math.max(y, dy - GRAPH_MARGIN);
+
+		zoom.scaleExtent(extent)
+			.transform(svg, d3.zoomIdentity
+				.scale(scale)
+				.translate(xOffset, yOffset)
+			);
+	};
+
+	var extent = [
+		[-GRAPH_MARGIN , -GRAPH_MARGIN],
+		[width + GRAPH_MARGIN, height + GRAPH_MARGIN]
+	];
+	zoom.translateExtent(extent);
+
+	resetHeight();
+	redraw({
+		transform: {
+			k: INITIAL_SCALE,
+			x: Math.max((svgElement.clientWidth / INITIAL_SCALE - width) / 2, GRAPH_MARGIN),
+			y: Math.max((svgElement.clientHeight / INITIAL_SCALE - height) / 2, GRAPH_MARGIN)
+		}
+	});
+
+	window.addEventListener('resize', redraw);
+
 });
