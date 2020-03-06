@@ -124,8 +124,7 @@ loadJSON(DATA_URL).then(function(data) {
 			height: 30,
 			rx: 5,
 			ry: 5,
-			style: 'stroke: ' + (dead ? '#f00' : colors.stroke) +
-				'; stroke-width: ' + (dead ? 3 : 1) +
+			style: 'stroke: ' + colors.stroke +
 				'; fill: ' + colors.fill,
 			description: 'No: ' + id +
 				'<br>居住地: ' + address +
