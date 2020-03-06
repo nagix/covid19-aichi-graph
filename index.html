@@ -26,8 +26,14 @@
 	<script type="text/javascript" src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
 </head>
 <body>
-	<h2>愛知県 新型コロナウイルス クラスターグラフ</h2>
-	<p>最終更新日: <span id="last-update"></span> [<a href="http://www.city.nagoya.jp/kenkofukushi/page/0000124556.html">データソース1</a> | <a href="https://www.pref.aichi.jp/soshiki/kenkotaisaku/novel-coronavirus.html">データソース2</a> | <a href="https://github.com/nagix/covid19-aichi-graph">GitHub レポジトリ</a>]</p>
+	<div class="bar">
+		<div class="logo"></div>
+		<div class="title">愛知県 新型コロナウイルス クラスターグラフ</div>
+	</div>
+	<p class="description">
+		<span id="last-update"></span> 更新
+		[<a href="http://www.city.nagoya.jp/kenkofukushi/page/0000124556.html">データソース1</a> | <a href="https://www.pref.aichi.jp/soshiki/kenkotaisaku/novel-coronavirus.html">データソース2</a> | <a href="https://github.com/nagix/covid19-aichi-graph">GitHub レポジトリ</a>]
+	</p>
 	<svg id="network" width=800 style="width: 100%"><g></g></svg>
 	<script type="text/javascript" src="js/main.js"></script>
 </body>

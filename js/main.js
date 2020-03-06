@@ -28,8 +28,8 @@ var initialNodes = [
 ];
 
 var clusters = [
-	{ id: 'gymA', label: 'スポーツジムAクラスター', clusterLabelPos: 'top', style: 'stroke: #cc9; fill: #ffc;', nodes:[4, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 51] },
-	{ id: 'gymB', label: 'スポーツジムBクラスター', clusterLabelPos: 'top', style: 'stroke: #cc9; fill: #ffc;', nodes:[15, 23, 24, 26] }
+	{ id: 'gymA', label: 'スポーツジムAクラスター', clusterLabelPos: 'top', style: 'fill: #3666b0; opacity: 0.2;', nodes:[4, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 51] },
+	{ id: 'gymB', label: 'スポーツジムBクラスター', clusterLabelPos: 'top', style: 'fill: #3666b0; opacity: 0.2;', nodes:[15, 23, 24, 26] }
 ];
 
 var boxColors = {
