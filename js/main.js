@@ -27,13 +27,15 @@ var initialNodes = [
 	{ id: 'wuhan', label: '武漢' },
 	{ id: 'hawai', label: 'ハワイ' },
 	{ id: 'unknown', label: '不明' },
-	{ id: 'france', label: 'フランス' }
+	{ id: 'france', label: 'フランス' },
+	{ id: 'live-house', label: '大阪ライブハウス' }
 ];
 
 var clusters = [
 	{ id: 'gym-a', label: 'スポーツジムAクラスター', nodes:[4, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 51] },
 	{ id: 'gym-b', label: 'スポーツジムBクラスター', nodes:[15, 23, 24, 26] },
-	{ id: 'day-service', label: '高齢者デイサービスクラスター', nodes:[29, 30, 31, 37, 38, 39, 45, 46, 47, 48, 49, 53, 54, 55, 56, 60, 61, 62, 65, 66, 67] }
+	{ id: 'day-service-a', label: '高齢者デイサービスAクラスター', nodes:[30, 37, 38, 39, 46, 47] },
+	{ id: 'day-service-b', label: '高齢者デイサービスBクラスター', nodes:[48, 49, 54, 55, 56, 60, 61, 62, 65, 66, 67, 73, 74, 75] }
 ];
 
 var boxColors = {
@@ -82,7 +84,7 @@ loadJSON(DATA_URL).then(function(data) {
 		return graph.setNode(id, {
 			id: id,
 			label: node.label,
-			width: 100,
+			width: 120,
 			height: 30,
 			rx: 5,
 			ry: 5,
@@ -111,6 +113,8 @@ loadJSON(DATA_URL).then(function(data) {
 			sourceIds = ['hawai'];
 		} else if (supplement.match(/フランス/)) {
 			sourceIds = ['france'];
+		} else if (supplement.match(/ライブハウス/)) {
+			sourceIds = ['live-house'];
 		}
 
 		graph.setNode(id, {
@@ -118,10 +122,11 @@ loadJSON(DATA_URL).then(function(data) {
 			labelType: 'html',
 			label: '<div class="container">' +
 				'<div class="id" style="background-color: ' + colors.stroke + ';">' + id + '</div>' +
-				'<div class="label">' + age + sex + '</div>' +
-				'</div>',
+				'<div class="label">' + age + sex + '</div>' + (
+					dead ? '<div class="dead badge">死亡</div>' : ''
+				) + '</div>',
 			labelpos: 'l',
-			width: 120,
+			width: 160,
 			height: 30,
 			rx: 5,
 			ry: 5,
