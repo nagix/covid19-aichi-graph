@@ -40,7 +40,8 @@ var clusters = [
 
 var boxColors = {
 	'男性': { stroke: '#559', fill: '#ccf' },
-	'女性': { stroke: '#955', fill: '#fcc' }
+	'女性': { stroke: '#955', fill: '#fcc' },
+	'非公表': { stroke: '#555', fill: '#ccc' }
 };
 
 var loadJSON = function(url) {
